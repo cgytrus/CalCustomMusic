@@ -6,7 +6,7 @@ using System.Reflection;
 
 using BepInEx.Logging;
 
-using CaLAPI.Patches;
+using CalApi.Patches;
 
 using HarmonyLib;
 

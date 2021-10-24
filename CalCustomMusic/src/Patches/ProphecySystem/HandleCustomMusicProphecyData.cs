@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 
-using CaLAPI.Patches;
+using CalApi.Patches;
 
 using HarmonyLib;
 

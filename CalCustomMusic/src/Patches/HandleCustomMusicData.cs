@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-using CaLAPI.Patches;
+using CalApi.Patches;
 
 using HarmonyLib;
 

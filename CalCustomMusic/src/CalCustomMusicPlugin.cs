@@ -1,6 +1,6 @@
 ﻿using BepInEx;
 
-using CaLAPI.API;
+using CalApi.API;
 
 using CalCustomMusic.Patches;
 
