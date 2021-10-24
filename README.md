@@ -4,7 +4,7 @@ A mod that adds custom music support to [Cats are Liquid - A Better Place](https
 ## Installation
 1. Install [Cats are Liquid API](https://github.com/cgytrus/CalApi)
 2. Install [Cats are Liquid Custom Music](https://github.com/cgytrus/CalCustomMusic/releases/latest)
-   the same way as Cats are Online API (look for the latest one **without** "Server")
+   the same way as Cats are Online API
 
 ## Contributing
 1. Clone the repository
