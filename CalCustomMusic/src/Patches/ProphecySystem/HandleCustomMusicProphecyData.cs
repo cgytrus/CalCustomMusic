@@ -18,7 +18,7 @@ namespace CalCustomMusic.Patches.ProphecySystem {
     // too lazy to figure out the monomod way (although, should be pretty easy, idk)
     [HarmonyPatch("ProphecySystem.Prophet+<Tell>d__42,Assembly-CSharp", "MoveNext", MethodType.Normal)]
     internal class HandleCustomMusicProphecyData : IPatch {
-        public void Apply() => Harmony.CreateAndPatchAll(typeof(HandleCustomMusicData));
+        public void Apply() => Harmony.CreateAndPatchAll(GetType());
 
         // ReSharper disable once UnusedMember.Local
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
