@@ -8,8 +8,8 @@ namespace CalCustomMusic.Patches {
     internal class RegisterTracks : IPatch {
         public void Apply() => On.PolyMap.MapManager.CallMapLoadedActions += (orig, self, state, mapName) => {
             IEnumerator original = orig(self, state, mapName);
-            return new[] { Prefix(), original }.GetEnumerator();
-                
+            return Prefix();
+
             IEnumerator Prefix() {
                 string mapPackPath =
                     Path.GetDirectoryName(Path.GetDirectoryName(PolyMap.MapManager.LastLoadedPolyMapPath));
@@ -25,12 +25,14 @@ namespace CalCustomMusic.Patches {
                     if(mapPackPath != null) {
                         CustomMusic.logger.LogInfo($"Registering modded tracks for world pack {mapPackPath}");
                         foreach(string file in Directory.GetFiles(mapPackPath)) {
-                            yield return CalCustomMusicPlugin.instance.StartCoroutine(CustomMusic.RegisterTrack(file));
+                            CalCustomMusicPlugin.instance.StartCoroutine(CustomMusic.RegisterTrack(file));
                         }
                     }
                     CustomMusic.UpdateMusicSelectors();
                     CustomMusic.currentlyLoadedTracksForWorldpack = mapPackPath;
                 }
+
+                yield return original;
             }
         };
     }
