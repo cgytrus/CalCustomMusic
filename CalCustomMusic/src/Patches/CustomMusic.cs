@@ -50,13 +50,14 @@ namespace CalCustomMusic.Patches {
             vanillaTracksCount = ((AudioClip[])tracks.GetValue(self)).Length;
         };
 
-        public static IEnumerator RegisterTrack(string path) {
+        public static void RegisterTrack(string path) {
             string fullPath = $"file://{path}";
             string extension = Path.GetExtension(path);
             AudioType audioType = ExtensionToAudioType(extension);
-            if(audioType == AudioType.UNKNOWN) yield break;
+            if(audioType == AudioType.UNKNOWN) return;
             using UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(fullPath, audioType);
-            yield return request.SendWebRequest();
+            UnityWebRequestAsyncOperation requestOperation = request.SendWebRequest();
+            while(!requestOperation.isDone) { }
             if(request.isNetworkError || request.isHttpError) logger.LogError(request.error);
             else {
                 AudioClip clip = DownloadHandlerAudioClip.GetContent(request);
@@ -67,12 +68,12 @@ namespace CalCustomMusic.Patches {
 
         private static void RegisterTrack(AudioClip clip) {
             logger.LogInfo($"Registering modded track {clip.name}");
-            
+
             AudioClip[] tracks = (AudioClip[])CustomMusic.tracks.GetValue(vanillaInstance);
             Array.Resize(ref tracks, tracks.Length + 1);
             tracks[tracks.Length - 1] = clip;
             CustomMusic.tracks.SetValue(vanillaInstance, tracks);
-            
+
             UpdateMusicSelectors(tracks);
         }
 
