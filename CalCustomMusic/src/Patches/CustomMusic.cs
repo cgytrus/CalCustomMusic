@@ -10,6 +10,10 @@ using CalApi.Patches;
 
 using HarmonyLib;
 
+using Mono.Cecil.Cil;
+
+using MonoMod.Cil;
+
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -21,6 +25,8 @@ namespace CalCustomMusic.Patches;
 // ReSharper disable once ClassNeverInstantiated.Global
 internal class CustomMusic : IPatch {
     internal static ManualLogSource? logger { get; set; }
+
+    public static event EventHandler? initialized;
 
     public static Music? vanillaInstance { get; private set; }
     public static AudioSource? audioSource { get; private set; }
@@ -44,13 +50,21 @@ internal class CustomMusic : IPatch {
 
     private static readonly FieldInfo tracks = AccessTools.Field(typeof(Music), "tracks");
 
-    public void Apply() => On.Music.Start += (orig, self) => {
-        orig(self);
-        vanillaInstance = self;
-        audioSource = (AudioSource)AccessTools.Field(typeof(Music), "audioSource").GetValue(self);
-        _queue = (List<AudioClip?>)AccessTools.Field(typeof(Music), "queue").GetValue(self);
-        vanillaTracksCount = ((AudioClip[])tracks.GetValue(self)).Length;
+    public void Apply() => IL.Music.Start += il => {
+        ILCursor cursor = new(il);
+        cursor.GotoNext(code => code.MatchCall<Music>(nameof(Music.QueueTrack)));
+        cursor.Index -= 2;
+        cursor.Emit(OpCodes.Ldarg_0);
+        cursor.Emit<CustomMusic>(OpCodes.Call, nameof(Initialize));
     };
+
+    private static void Initialize(Music vanillaInstance) {
+        CustomMusic.vanillaInstance = vanillaInstance;
+        audioSource = (AudioSource)AccessTools.Field(typeof(Music), "audioSource").GetValue(vanillaInstance);
+        _queue = (List<AudioClip?>)AccessTools.Field(typeof(Music), "queue").GetValue(vanillaInstance);
+        vanillaTracksCount = ((AudioClip[])tracks.GetValue(vanillaInstance)).Length;
+        initialized?.Invoke(null, EventArgs.Empty);
+    }
 
     public static void RegisterTrack(string path) {
         string fullPath = $"file://{path}";

@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 
 using CalApi.API;
 
@@ -14,6 +15,12 @@ public class CalCustomMusicPlugin : BaseUnityPlugin {
     public CalCustomMusicPlugin() {
         instance = this;
         Patches.CustomMusic.logger = Logger;
+
+        Logger.LogInfo("Loading settings");
+
+        ConfigEntry<int> menusMusic = Config.Bind("General", "MenusMusic", 7, "");
+        menusMusic.SettingChanged += (_, _) => RegisterTracks.startingTrack = menusMusic.BoxedValue;
+        RegisterTracks.startingTrack = menusMusic.BoxedValue;
     }
 
     private void Awake() {
