@@ -6,8 +6,8 @@ using CalCustomMusic.Patches;
 
 namespace CalCustomMusic;
 
-[BepInPlugin("mod.cgytrus.plugins.calCustomMusic", "Custom Music", "0.1.2")]
-[BepInDependency("mod.cgytrus.plugins.calapi", "0.2.2")]
+[BepInPlugin("mod.cgytrus.plugins.calCustomMusic", PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+[BepInDependency("mod.cgytrus.plugins.calapi", "0.2.3")]
 public class CalCustomMusicPlugin : BaseUnityPlugin {
     public static CalCustomMusicPlugin? instance { get; private set; }
 
