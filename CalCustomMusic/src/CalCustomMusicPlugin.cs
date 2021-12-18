@@ -12,6 +12,8 @@ namespace CalCustomMusic;
 public class CalCustomMusicPlugin : BaseUnityPlugin {
     public static CalCustomMusicPlugin? instance { get; private set; }
 
+    private readonly ConfigEntry<bool> _fadeMusicOnQuit;
+
     public CalCustomMusicPlugin() {
         instance = this;
         Patches.CustomMusic.logger = Logger;
@@ -21,6 +23,8 @@ public class CalCustomMusicPlugin : BaseUnityPlugin {
         ConfigEntry<int> menusMusic = Config.Bind("General", "MenusMusic", 7, "");
         menusMusic.SettingChanged += (_, _) => RegisterTracks.startingTrack = menusMusic.BoxedValue;
         RegisterTracks.startingTrack = menusMusic.BoxedValue;
+
+        _fadeMusicOnQuit = Config.Bind("General", "FadeMusicOnQuit", false, "");
     }
 
     private void Awake() {
@@ -43,6 +47,11 @@ public class CalCustomMusicPlugin : BaseUnityPlugin {
         On.PolyMap.MapManager.UnloadPolyMap += (orig, self) => {
             orig(self);
             PolyMapsUnloaded();
+        };
+
+        On.ExitScreen.InvokeDelayedQuitGame += (orig, self) => {
+            orig(self);
+            if(_fadeMusicOnQuit.Value) Music.QueueTrack(0);
         };
     }
 }
