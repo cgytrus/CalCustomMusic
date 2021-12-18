@@ -28,9 +28,6 @@ public class CalCustomMusicPlugin : BaseUnityPlugin {
             Patches.CustomMusic.waitForEnd = false;
             HandleCustomMusicData.updatedLoop = true;
             Patches.CustomMusic.loop = true;
-            // i don't remember why this is commented out
-            /*API.Music.UnregisterAllTracks();
-            API.Music.UpdateMusicSelectors();*/
         }
         On.PolyMap.MapManager.UnloadAllPolymaps += orig => {
             orig();
