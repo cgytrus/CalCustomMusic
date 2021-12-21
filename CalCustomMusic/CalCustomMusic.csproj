@@ -25,7 +25,7 @@
       <HintPath>libs\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="CalApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="CalApi, Version=0.2.5.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>libs\CalApi.dll</HintPath>
       <Private>False</Private>
     </Reference>

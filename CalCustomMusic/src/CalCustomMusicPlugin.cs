@@ -8,7 +8,7 @@ using CalCustomMusic.Patches;
 namespace CalCustomMusic;
 
 [BepInPlugin("mod.cgytrus.plugins.calCustomMusic", PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-[BepInDependency("mod.cgytrus.plugins.calapi", "0.2.3")]
+[BepInDependency("mod.cgytrus.plugins.calapi", "0.2.5")]
 public class CalCustomMusicPlugin : BaseUnityPlugin {
     public static CalCustomMusicPlugin? instance { get; private set; }
 
@@ -17,12 +17,6 @@ public class CalCustomMusicPlugin : BaseUnityPlugin {
     public CalCustomMusicPlugin() {
         instance = this;
         Patches.CustomMusic.logger = Logger;
-
-        Logger.LogInfo("Loading settings");
-
-        ConfigEntry<int> menusMusic = Config.Bind("General", "MenusMusic", 7, "");
-        menusMusic.SettingChanged += (_, _) => RegisterTracks.startingTrack = menusMusic.BoxedValue;
-        RegisterTracks.startingTrack = menusMusic.BoxedValue;
 
         _fadeMusicOnQuit = Config.Bind("General", "FadeMusicOnQuit", false, "");
     }
