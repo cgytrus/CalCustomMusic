@@ -11,6 +11,7 @@ namespace CalCustomMusic.Patches;
 // ReSharper disable once ClassNeverInstantiated.Global
 internal class RegisterTracks : IPatch {
     private const string RootName = "Menus";
+    private const string ReadmeName = "CustomMusic-README.txt";
     private const string StartingTrackName = "startingTrack.txt";
 
     private const int DefaultStartingTrack = 7;
@@ -23,6 +24,19 @@ internal class RegisterTracks : IPatch {
 
         CustomMusic.initialized += (_, _) => UpdateProfile();
         CustomizationProfiles.profileChanged += (_, _) => Music.QueueTrack(UpdateProfile());
+
+        Directory.CreateDirectory(Path.Combine(CustomizationProfiles.defaultPath, RootName));
+        CreateReadme(Path.Combine(CustomizationProfiles.defaultPath, RootName, ReadmeName));
+    }
+
+    private static void CreateReadme(string path) {
+        if(File.Exists(path)) return;
+        File.WriteAllText(path, @"All custom music with supported formats is registered when entering the main menu.
+startingTrack.txt contains the music ID that would be played in the menus.
+Custom music IDs start at 16, custom music may have any file name, so an example configuration would be:
+2 files in the `Menus` folder:
+`startingTrack.txt`, which has *only* the number 16 written in it
+and `myCustomMusic.ogg`, this track would be loaded under music ID 16 and played in the menus");
     }
 
     private static int UpdateProfile() {
