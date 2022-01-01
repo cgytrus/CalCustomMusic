@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net471</TargetFramework>
     <Product>Custom Music</Product>
-    <Version>0.1.3</Version>
+    <Version>0.1.4</Version>
     <Company>https://github.com/cgytrus/CalCustomMusic</Company>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
