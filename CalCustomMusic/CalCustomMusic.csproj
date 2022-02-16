@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net471</TargetFramework>
     <Product>Custom Music</Product>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
     <Company>https://github.com/cgytrus/CalCustomMusic</Company>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
@@ -25,7 +25,7 @@
       <HintPath>libs\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="CalApi, Version=0.2.5.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="CalApi, Version=0.2.6.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>libs\CalApi.dll</HintPath>
       <Private>False</Private>
     </Reference>
