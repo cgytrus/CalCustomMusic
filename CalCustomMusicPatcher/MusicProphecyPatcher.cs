@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 
 using Mono.Cecil;
+using Mono.Cecil.Rocks;
 
 namespace CalCustomMusicPatcher;
 
@@ -14,7 +15,22 @@ public static class MusicProphecyPatcher {
     public static void Patch(AssemblyDefinition assembly) {
         ModuleDefinition module = assembly.MainModule;
 
+        MethodReference dropdownAttributeConstructor = module.GetType("DataEditorDropdown").Methods[0];
         MethodReference toggleAttributeConstructor = module.GetType("DataEditorToggle").Methods[0];
+
+        FieldDefinition customMusicIdField = new("customMusicID", FieldAttributes.Public, module.TypeSystem.Int32);
+        CustomAttribute customMusicIdAttribute = new(dropdownAttributeConstructor);
+        customMusicIdAttribute.ConstructorArguments.Add(new CustomAttributeArgument(module.TypeSystem.String,
+            "Custom Music"));
+        customMusicIdAttribute.ConstructorArguments.Add(new CustomAttributeArgument(
+            module.TypeSystem.String.MakeArrayType(), new string[] { }));
+        customMusicIdField.CustomAttributes.Add(customMusicIdAttribute);
+
+        FieldDefinition useCustomMusicField = new("useCustomMusic", FieldAttributes.Public, module.TypeSystem.Boolean);
+        CustomAttribute useCustomMusicAttribute = new(toggleAttributeConstructor);
+        useCustomMusicAttribute.ConstructorArguments.Add(new CustomAttributeArgument(module.TypeSystem.String,
+            "Use Custom Music"));
+        useCustomMusicField.CustomAttributes.Add(useCustomMusicAttribute);
 
         FieldDefinition noFadeField = new("noFade", FieldAttributes.Public, module.TypeSystem.Boolean);
         CustomAttribute noFadeAttribute = new(toggleAttributeConstructor);
@@ -33,6 +49,8 @@ public static class MusicProphecyPatcher {
         noLoopField.CustomAttributes.Add(noLoopAttribute);
 
         TypeDefinition musicProphecyType = module.GetType("ProphecySystem.MusicProphecy");
+        musicProphecyType.Fields.Add(customMusicIdField);
+        musicProphecyType.Fields.Add(useCustomMusicField);
         musicProphecyType.Fields.Add(noFadeField);
         musicProphecyType.Fields.Add(waitForEndField);
         musicProphecyType.Fields.Add(noLoopField);

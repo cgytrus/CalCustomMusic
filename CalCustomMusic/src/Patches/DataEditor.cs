@@ -13,7 +13,7 @@ internal class DataEditor : IPatch {
     public void Apply() => On.DataEditor.AddDropdown += (On.DataEditor.orig_AddDropdown orig, CalDataEditor self,
         RectTransform content, MonoBehaviour component, FieldInfo field, string nameTranslationString,
         string[] itemTranslationStrings, ref float yPosition) => {
-        if(nameTranslationString == "GENERIC_MUSIC")
+        if(nameTranslationString is "GENERIC_MUSIC" or "Custom Music")
             return orig(self, content, component, field, nameTranslationString, CustomMusic.musicProphecyItems,
                 ref yPosition);
         return orig(self, content, component, field, nameTranslationString, itemTranslationStrings, ref yPosition);

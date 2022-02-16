@@ -89,7 +89,9 @@ internal class HandleCustomMusicProphecyData : IPatch {
             (bool)AccessTools.Field(typeof(MusicProphecy), "waitForEnd").GetValue(prophecy);
         CalCustomMusic.Patches.HandleCustomMusicData.updatedLoop =
             !(bool)AccessTools.Field(typeof(MusicProphecy), "noLoop").GetValue(prophecy);
-        CalMusic.QueueTrack(prophecy.musicID);
+        bool useCustomMusic = (bool)AccessTools.Field(typeof(MusicProphecy), "useCustomMusic").GetValue(prophecy);
+        CalMusic.QueueTrack(useCustomMusic ?
+            (int)AccessTools.Field(typeof(MusicProphecy), "customMusicID").GetValue(prophecy) : prophecy.musicID);
         CustomMusic.musicStoppedThisFrame = false;
     }
 }
