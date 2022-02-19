@@ -1,17 +1,21 @@
 ﻿using System;
 using System.IO;
 
+using BepInEx.Logging;
+
 using CalApi.Patches;
 
 using UnityEngine;
 
 namespace CalCustomMusic.Patches;
 
-// ReSharper disable once UnusedType.Global
+// ReSharper disable once ClassNeverInstantiated.Global
 internal class PackWorldPackWithMusic : IPatch {
     private const string MusicMarker = "---MUSIC---";
     private const string MusicTrackMarker = "\n---MUSIC TRACK---\n";
     private const string MusicTrackDataMarker = "\n---MUSIC TRACK DATA---\n";
+
+    internal static ManualLogSource? logger { get; set; }
 
     public void Apply() {
         ApplyPackPatch();
@@ -20,7 +24,7 @@ internal class PackWorldPackWithMusic : IPatch {
 
     private static void ApplyPackPatch() => On.WorldPacker.PackWorldPack += (orig, packFolder) => {
         string result = orig(packFolder);
-        CustomMusic.logger?.LogInfo("Packing modded music");
+        logger?.LogInfo("Packing modded music");
 
         string str = MusicMarker;
         foreach(string filePath in Directory.GetFiles(packFolder)) {
@@ -36,7 +40,7 @@ internal class PackWorldPackWithMusic : IPatch {
 
     private static void ApplyUnpackPatch() => On.WorldPacker.UnpackPack += (orig, pack, version) => {
         orig(pack, version);
-        CustomMusic.logger?.LogInfo("Unpacking modded music");
+        logger?.LogInfo("Unpacking modded music");
 
         string contents = pack.Substring(WorldPacker.packStartMarker.Length,
             pack.IndexOf(WorldPacker.packDataStartMarker, StringComparison.Ordinal) -
@@ -50,13 +54,13 @@ internal class PackWorldPackWithMusic : IPatch {
             string musicData = music[i];
             string[] musicTracks =
                 musicData.Split(new[] { MusicTrackMarker }, StringSplitOptions.RemoveEmptyEntries);
-            CustomMusic.logger?.LogInfo($"Found {musicTracks.Length.ToString()} tracks");
+            logger?.LogInfo($"Found {musicTracks.Length.ToString()} tracks");
             foreach(string musicTrack in musicTracks) {
                 string[] musicTrackData = musicTrack.Split(new[] { MusicTrackDataMarker },
                     StringSplitOptions.RemoveEmptyEntries);
                 string trackName = musicTrackData[0];
                 string filePath = Path.Combine(packFolder, trackName);
-                CustomMusic.logger?.LogInfo($"Unpacking track {trackName} to {filePath}");
+                logger?.LogInfo($"Unpacking track {trackName} to {filePath}");
                 string trackData = musicTrackData[1];
                 byte[] track = Convert.FromBase64String(trackData);
                 File.WriteAllBytes(filePath, track);
