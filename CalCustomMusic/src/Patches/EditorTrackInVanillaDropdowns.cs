@@ -17,7 +17,11 @@ internal class EditorTrackInVanillaDropdowns : IPatch {
             orig(self);
             Dropdown musicDropdown =
                 (Dropdown)AccessTools.Field(typeof(RSSystem.RoomSettingsUI), "musicDropdown").GetValue(self);
-            if(musicDropdown.options.Count < 16) musicDropdown.options.Add(new Dropdown.OptionData("Editor"));
+            if(musicDropdown.options.Count < 16) {
+                musicDropdown.options.Add(new Dropdown.OptionData("Editor"));
+                // hack: the game will try to set the track but will fail because it doesn't exist
+                musicDropdown.options.Add(new Dropdown.OptionData("Don't change"));
+            }
         };
 
         On.DataEditor.AddDropdown += (On.DataEditor.orig_AddDropdown orig, DataEditor self, RectTransform content,
@@ -26,10 +30,8 @@ internal class EditorTrackInVanillaDropdowns : IPatch {
             if(nameTranslationString != "GENERIC_MUSIC")
                 return orig(self, content, component, field, nameTranslationString, itemTranslationStrings,
                     ref yPosition);
-            Array.Resize(ref itemTranslationStrings, itemTranslationStrings.Length + 2);
-            itemTranslationStrings[itemTranslationStrings.Length - 2] = "Editor";
-            // hack: the game will try to set the track but will fail because it doesn't exist
-            itemTranslationStrings[itemTranslationStrings.Length - 1] = "Don't change";
+            Array.Resize(ref itemTranslationStrings, itemTranslationStrings.Length + 1);
+            itemTranslationStrings[itemTranslationStrings.Length - 1] = "Editor";
             return orig(self, content, component, field, nameTranslationString, itemTranslationStrings, ref yPosition);
         };
     }

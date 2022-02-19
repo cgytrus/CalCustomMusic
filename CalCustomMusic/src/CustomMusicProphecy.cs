@@ -35,6 +35,7 @@ public class CustomMusicProphecy : BaseProphecy {
     [DataEditorToggle("EDITOR_DATAEDITOR_PROPHECYSYSTEM_PROPHECY_RUNPARALLEL_TOGGLE_LABEL")]
     [SerializeField] private bool runParallel = true;
 
+    // ReSharper disable once NotAccessedField.Global
     [DataEditorStringDisplay("Tip:")]
     [IgnoreWhenSaving] public string fallbackTip =
         "To select music that's going to play for vanilla players, add a vanilla music prophecy after this one";
