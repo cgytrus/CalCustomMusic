@@ -6,7 +6,7 @@ using CalApi.API;
 namespace CalCustomMusic;
 
 [BepInPlugin("mod.cgytrus.plugins.calCustomMusic", PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-[BepInDependency("mod.cgytrus.plugins.calapi", "0.2.5")]
+[BepInDependency("mod.cgytrus.plugins.calapi", "0.2.6")]
 public class CalCustomMusicPlugin : BaseUnityPlugin {
     private readonly ConfigEntry<bool> _fadeMusicOnQuit;
 
