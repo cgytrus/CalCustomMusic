@@ -17,11 +17,10 @@ internal class EditorTrackInVanillaDropdowns : IPatch {
             orig(self);
             Dropdown musicDropdown =
                 (Dropdown)AccessTools.Field(typeof(RSSystem.RoomSettingsUI), "musicDropdown").GetValue(self);
-            if(musicDropdown.options.Count < 16) {
-                musicDropdown.options.Add(new Dropdown.OptionData("Editor"));
-                // hack: the game will try to set the track but will fail because it doesn't exist
-                musicDropdown.options.Add(new Dropdown.OptionData("Don't change"));
-            }
+            if(musicDropdown.options.Count >= 16) return;
+            musicDropdown.options.Add(new Dropdown.OptionData("Editor"));
+            // hack: the game will try to set the track but will fail because it doesn't exist
+            musicDropdown.options.Add(new Dropdown.OptionData("Don't change"));
         };
 
         On.DataEditor.AddDropdown += (On.DataEditor.orig_AddDropdown orig, DataEditor self, RectTransform content,

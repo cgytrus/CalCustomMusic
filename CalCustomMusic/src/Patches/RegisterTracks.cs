@@ -25,7 +25,10 @@ internal class RegisterTracks : IPatch {
             return orig(self, state, mapName);
         };
 
-        CalCustomMusic.CustomMusic.initialized += (_, _) => UpdateProfile();
+        CalCustomMusic.CustomMusic.initialized += (_, _) => {
+            _currentlyLoadedTracksForWorldpack = null;
+            UpdateProfile();
+        };
         CustomizationProfiles.profileChanged += (_, _) => {
             UpdateProfile();
             CalCustomMusic.CustomMusic.TryQueueStartingTrack();
@@ -48,7 +51,6 @@ and `myCustomMusic.ogg`, this track would be played in the menus");
     private static void UpdateProfile() {
         string customMenusMusicPath = Path.Combine(CustomizationProfiles.currentPath!, RootName);
         string startingTrackPath = Path.Combine(customMenusMusicPath, StartingTrackName);
-        //AccessTools.Field(typeof(Music), "startingTrack").SetValue(CustomMusic.vanillaInstance, startingTrack);
         if(File.Exists(startingTrackPath)) CalCustomMusic.CustomMusic.startingTrack = File.ReadAllText(startingTrackPath);
         CalCustomMusic.CustomMusic.ReregisterTracks();
         CalCustomMusic.CustomMusic.RegisterCustomTracks(customMenusMusicPath);

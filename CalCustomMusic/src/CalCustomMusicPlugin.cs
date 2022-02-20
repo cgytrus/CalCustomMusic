@@ -27,6 +27,6 @@ public class CalCustomMusicPlugin : BaseUnityPlugin {
         };
 
         Logger.LogInfo("Registering prophecies");
-        Prophecies.RegisterProphecy<CustomMusicProphecy>("cgytrus.music", "MUSIC");
+        Prophecies.RegisterProphecy<ProphecySystem.MusicProphecy, CustomMusicProphecy>("cgytrus.music", "MUSIC");
     }
 }

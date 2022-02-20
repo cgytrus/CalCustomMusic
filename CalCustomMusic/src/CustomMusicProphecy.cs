@@ -35,18 +35,23 @@ public class CustomMusicProphecy : BaseProphecy {
     [DataEditorToggle("EDITOR_DATAEDITOR_PROPHECYSYSTEM_PROPHECY_RUNPARALLEL_TOGGLE_LABEL")]
     [SerializeField] private bool runParallel = true;
 
-    // ReSharper disable once NotAccessedField.Global
-    [DataEditorStringDisplay("Tip:")]
-    [IgnoreWhenSaving] public string fallbackTip =
-        "To select music that's going to play for vanilla players, add a vanilla music prophecy after this one";
-
-    public override bool skipNext => _skipNext;
-    private bool _skipNext;
+#pragma warning disable CS0649
+#pragma warning disable CS0169
+    [DataEditorDropdown("Fallback Music",
+        new string[] {
+            "EDITOR_ROOMSETTINGS_MUSIC_DROPDOWN_NOMUSIC", "Alone in a Hall", "Casual Physics", "Company",
+            "Just Add Circles", "Less Cropping Required", "Lighter Atmosphere", "Machines Can Hope", "Neon Lines",
+            "Not Enough Shampoo", "Not Fast Enough", "Platforming Cats", "Raycats", "There is no Alteration", "Wind",
+            "Editor", "Don't change"
+        })]
+    // ReSharper disable once NotAccessedField.Local
+    [SerializeField] private int musicID;
+#pragma warning restore CS0649
+#pragma warning restore CS0169
 
     public override IEnumerator Performer(Prophet prophet, int index) {
         bool finished = false;
         CustomMusic.TryQueueTrack(musicName, loop, fade, waitForEnd, () => finished = true);
-        _skipNext = index + 1 < prophet.prophecies.Count && prophet.prophecies[index + 1] is MusicProphecy;
         if(!runParallel) yield return new WaitUntil(() => finished);
     }
 }
