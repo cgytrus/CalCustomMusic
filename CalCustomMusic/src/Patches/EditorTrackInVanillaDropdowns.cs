@@ -5,6 +5,8 @@ using CalApi.Patches;
 
 using HarmonyLib;
 
+using Language;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,10 +19,15 @@ internal class EditorTrackInVanillaDropdowns : IPatch {
             orig(self);
             Dropdown musicDropdown =
                 (Dropdown)AccessTools.Field(typeof(RSSystem.RoomSettingsUI), "musicDropdown").GetValue(self);
-            if(musicDropdown.options.Count >= 16) return;
+            Music music = (Music)AccessTools.Field(typeof(Music), "instance").GetValue(null);
+            AudioClip[] tracks = (AudioClip[])AccessTools.Field(typeof(Music), "tracks").GetValue(music);
+            if(musicDropdown.options.Count >= tracks.Length + 1) return;
             musicDropdown.options.Add(new Dropdown.OptionData("Editor"));
             // hack: the game will try to set the track but will fail because it doesn't exist
             musicDropdown.options.Add(new Dropdown.OptionData("Don't change"));
+
+            musicDropdown.GetComponent<UILanguageSetter>().keys.Add("");
+            musicDropdown.GetComponent<UILanguageSetter>().keys.Add("");
         };
 
         On.DataEditor.AddDropdown += (On.DataEditor.orig_AddDropdown orig, DataEditor self, RectTransform content,
