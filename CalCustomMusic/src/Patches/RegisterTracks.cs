@@ -19,13 +19,13 @@ internal class RegisterTracks : IPatch {
             string? worldpackPath =
                 Path.GetDirectoryName(Path.GetDirectoryName(PolyMap.MapManager.LastLoadedPolyMapPath));
             if(_currentlyLoadedTracksForWorldpack == worldpackPath) return orig(self, state, mapName);
-            CalCustomMusic.CustomMusic.ReregisterTracks();
-            CalCustomMusic.CustomMusic.RegisterCustomTracks(worldpackPath);
+            CustomMusic.ReregisterTracks();
+            CustomMusic.RegisterCustomTracks(worldpackPath);
             _currentlyLoadedTracksForWorldpack = worldpackPath;
             return orig(self, state, mapName);
         };
 
-        CalCustomMusic.CustomMusic.initialized += (_, _) => {
+        CustomMusic.initialized += (_, _) => {
             _currentlyLoadedTracksForWorldpack = null;
             UpdateProfile();
         };
@@ -51,8 +51,8 @@ and `myCustomMusic.ogg`, this track would be played in the menus");
     private static void UpdateProfile() {
         string customMenusMusicPath = Path.Combine(CustomizationProfiles.currentPath!, RootName);
         string startingTrackPath = Path.Combine(customMenusMusicPath, StartingTrackName);
-        if(File.Exists(startingTrackPath)) CalCustomMusic.CustomMusic.startingTrack = File.ReadAllText(startingTrackPath);
-        CalCustomMusic.CustomMusic.ReregisterTracks();
-        CalCustomMusic.CustomMusic.RegisterCustomTracks(customMenusMusicPath);
+        if(File.Exists(startingTrackPath)) CustomMusic.startingTrack = File.ReadAllText(startingTrackPath);
+        CustomMusic.ReregisterTracks();
+        CustomMusic.RegisterCustomTracks(customMenusMusicPath);
     }
 }
