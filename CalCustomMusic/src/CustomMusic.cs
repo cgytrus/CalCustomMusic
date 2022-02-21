@@ -84,7 +84,6 @@ public static class CustomMusic {
         };
     }
 
-    // ReSharper disable once SuggestBaseTypeForParameter
     private static void Initialize() {
         _logger?.LogInfo("Initializing");
 
@@ -180,9 +179,8 @@ public static class CustomMusic {
         tracks.TryGetValue(name, out clip) || int.TryParse(name, out int id) && TryGetTrack(id, out clip);
 
     public static bool TryGetTrack(int id, out AudioClip? clip) {
-        Music music = (Music)AccessTools.Field(typeof(Music), "instance").GetValue(null);
-        AudioClip[] tracks = (AudioClip[])AccessTools.Field(typeof(Music), "tracks").GetValue(music);
-        if(id < tracks.Length) {
+        AudioClip[] tracks = (AudioClip[])AccessTools.Field(typeof(Music), "tracks").GetValue(_music);
+        if(id >= 0 && id < tracks.Length) {
             clip = tracks[id];
             return true;
         }
